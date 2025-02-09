@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupo de WhatsApp</title>
+    <style>
+        /* Estilos anteriores (sin cambios) */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e5ddd5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .chat-container {
+            width: 100%;
+            max-width: 100%;
+            background-color: #e6e8eb;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            border-left: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #075e54;
+            color: white;
+            position: relative;
+        }
+        .group-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .group-info {
+            flex-grow: 1;
+        }
+        .group-name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .group-subtitle {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        .header-icons {
+            display: flex;
+            gap: 10px;
+        }
+        .icon {
+            width: 23px;
+            height: 23px;
+            border-radius: 50%;
+        }
+        .chat-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .date-container {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            background-color: #fff;
+            padding: 5px 10px;
+            border-radius: 10px;
+            width: auto;
+            align-self: center;
+        }
+        .encryption-message {
+            display: flex;
+            align-items: center;
+            background-color: #fcf3cc;
+            padding: 8px;
+            border-radius: 10px;
+            margin: 5px 10px;
+            max-width: 80%;
+            align-self: center;
+            font-size: 9px; /* Tamaño de letra más pequeño */
+        }
+        .lock-icon {
+            margin-right: 5px;
+            font-size: 9px; /* Tamaño de letra más pequeño para el ícono */
+        }
+        .message-container {
+            display: flex;
+            align-items: flex-start;
+            margin: 5px 0;
+        }
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .message {
+            background-color: #dcf8c6;
+            padding: 8px 10px;
+            border-radius: 10px;
+            max-width: 70%;
+            position: relative; /* Para posicionar la hora */
+        }
+        .message-time {
+            position: absolute;
+            bottom: 2px;
+            right: 8px;
+            font-size: 10px;
+            color: #666;
+        }
+        .image-message {
+            width: 100%;
+            max-width: 250px;
+            border-radius: 10px;
+            align-self: flex-start;
+            margin-left: 40px;
+            position: relative; /* Para posicionar la hora */
+        }
+        .image-time {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            font-size: 10px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 2px 5px;
+            border-radius: 10px;
+        }
+
+        /* Estilos para el fondo oscuro */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        /* Estilos para la ventana modal */
+        .modal {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            max-height: 50%;
+            background-color: white;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.5s ease-out;
+            z-index: 1001;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        .modal-content {
+            padding: 20px;
+            text-align: center;
+        }
+        .modal-header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .modal-header h2 {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .modal-header p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .members {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .members .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .join-button {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .join-button:hover {
+            background-color: #128c7e;
+        }
+
+        /* Estilos para la segunda ventana modal */
+        .modal2 {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            max-height: 40%;
+            background-color: white;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.5s ease-out;
+            z-index: 1001;
+        }
+        .modal2-content {
+            padding: 20px;
+            text-align: center;
+        }
+        .modal2-content p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .share-button {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .share-button:hover {
+            background-color: #128c7e;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <!-- Cabecera -->
+        <div class="header">
+            <img src="https://i.ibb.co/j93Nqfnf/photo-4992573257815272956-m.jpg" alt="Grupo" class="group-img">
+            <div class="group-info">
+                <div class="group-name">🔞 ONLYS CASEROS 🔞</div>
+                <div class="group-subtitle">+57 473 2519, +52 673 5869, +1...</div>
+            </div>
+            <div class="header-icons">
+    <img src="https://cdn-icons-png.flaticon.com/512/3870/3870799.png" alt="" class="icon">
+    <img src="https://cdn-icons-png.flaticon.com/512/8212/8212730.png" alt="" class="icon">
+</div>        </div>
+
+        <div class="chat-content">
+            <!-- Contenedor de la fecha -->
+            <div class="date-container">Hoy</div>
+
+            <!-- Mensaje de encriptación -->
+            <div class="encryption-message">
+                <span class="lock-icon"></span> 🔒 Los mensajes y llamadas de WhatsApp están encriptados de extremo a extremo. Nadie fuera de este chat, ni siquiera Whatsapp, puede leerlos o escucharlos. Toca para obtener más información. 
+            </div>
+
+            <!-- Mensajes de chat con avatar -->
+            <div class="message-container">
+                <img src="https://i.ibb.co/MDYhmJkC/photo-4992573257815272959-m.jpg" alt="Usuario" class="avatar">
+                <div class="message">
+                    Hola, ¿cómo están? hay algún chico por aquí?
+                    <span class="message-time">10:15 AM</span>
+                </div>
+            </div>
+
+            <div class="message-container">
+                <img src="https://i.ibb.co/0pGVt6xG/photo-4992573257815272957-m.jpg" alt="Usuario" class="avatar">
+                <div class="message">
+                    ¿Quién para un chat hot que ando caliente 🔥?
+                    <span class="message-time">10:17 AM</span>
+                </div>
+            </div>
+
+            <div class="message-container">
+                <img src="https://i.ibb.co/nMQBJ0Gp/photo-4992573257815272958-m.jpg" alt="Usuario" class="avatar">
+                <div class="message">
+                    Escribeme al pv para más foticos
+                    <span class="message-time">10:20 AM</span>
+                </div>
+            </div>
+
+            <!-- Imagen enviada -->
+            <div style="position: relative;">
+                <img src="https://i.ibb.co/bgnWY5j7/photo-4992799748620661579-y.jpg" alt="Imagen enviada" class="image-message">
+                <span class="image-time">10:22 AM</span>
+            </div>
+
+            <!-- Mensaje de texto en vez de audio -->
+            <div class="message-container">
+                <img src="https://i.ibb.co/20TKhvrJ/photo-4992573257815272960-m.jpg" alt="Usuario" class="avatar">
+                <div class="message">
+                    Que rico está este grupo
+                    <span class="message-time">10:25 AM</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fondo oscuro -->
+    <div id="overlay" class="overlay"></div>
+
+    <!-- Primera ventana modal -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="https://i.ibb.co/j93Nqfnf/photo-4992573257815272956-m.jpg" alt="Grupo">
+                <h2>🔞 ONLYS CASEROS 🔞</h2>
+                <p>Creado en 2/9/25</p>
+            </div>
+            <div class="members">
+                <div class="avatar">+512</div>
+            </div>
+            <button class="join-button" onclick="openModal2()">Unirme al grupo</button>
+        </div>
+    </div>
+
+    <!-- Segunda ventana modal -->
+    <div id="modal2" class="modal2">
+        <div class="modal2-content">
+            <p>Para unirte debes compartir en 2 grupos tocando el botón compartir.</p>
+            <button class="share-button" onclick="shareOnTelegram()">Compartir</button>
+        </div>
+    </div>
+
+    <script>
+        // Mostrar la primera ventana modal y el fondo oscuro al cargar la página
+        window.onload = function() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('modal1').style.display = 'block';
+        };
+
+        // Función para abrir la segunda ventana modal
+        function openModal2() {
+            document.getElementById('modal1').style.display = 'none';
+            document.getElementById('modal2').style.display = 'block';
+        }
+
+        // Función para compartir en Telegram
+        function shareOnTelegram() {
+            const message = encodeURIComponent("🔥❌🔞 𝗟𝗔𝗦 𝗖𝗛𝗜𝗖𝗔𝗦 𝗠𝗔́𝗦 𝗛𝗢𝗧 𝗗𝗘 𝗧𝗘𝗟𝗘𝗚𝗥𝗔𝗠 😈👉 https://t.me/+wKX4psVux-o3ODcx 👀");
+            const telegramUrl = `tg://msg?text=${message}`;
+            window.location.href = telegramUrl; // Redirige a Telegram
+        }
+    </script>
+</body>
+</html>
