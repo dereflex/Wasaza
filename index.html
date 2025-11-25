@@ -365,7 +365,7 @@
     <div id="modal2" class="modal2">
         <div class="modal2-content">
             <p>Para unirte debes compartir en 2 grupos tocando el botón compartir.</p>
-            <button class="share-button" onclick="shareOnTelegram()">Compartir</button>
+            <button class="share-button" onclick="shareOnWhatsApp()">Compartir en WhatsApp</button>
         </div>
     </div>
 
@@ -382,11 +382,11 @@
             document.getElementById('modal2').style.display = 'block';
         }
 
-        // Función para compartir en Telegram
-        function shareOnTelegram() {
-            const message = encodeURIComponent("🔥❌🔞 𝗟𝗔𝗦 𝗖𝗛𝗜𝗖𝗔𝗦 𝗠𝗔́𝗦 𝗛𝗢𝗧 𝗗𝗘 𝗧𝗘𝗟𝗘𝗚𝗥𝗔𝗠 😈👉 https://t.me/+wKX4psVux-o3ODcx 👀");
-            const telegramUrl = `https://t.me/share/url?url=${message}`;
-            window.location.href = telegramUrl; // Redirige a Telegram
+        // Función para compartir en WhatsApp
+        function shareOnWhatsApp() {
+            const message = encodeURIComponent("🔥❌🔞 LAS CHICAS MÁS HOT DE WHATSAPP 😈👉 https://www.effectivegatecpm.com/yfdjf5vk2w?key=a350e1ebc169bdc9d3fd01b0240f392a");
+            const whatsappUrl = `https://wa.me/?text=${message}`;
+            window.open(whatsappUrl, '_blank');
         }
     </script>
 </body>
